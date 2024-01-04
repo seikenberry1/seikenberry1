@@ -1,6 +1,6 @@
 ## Hello Cruel World!
 
-<img src="birdie.png" alt="Monty Python!" style="width:400px;"/>
+<img src="birdie.png" alt="Monty Python!" style="width:500px;"/>
 
 I guess I'm a data scientist of sorts. Interested in environmental epidemiology, carbon footprinting, and agriculture.
 
