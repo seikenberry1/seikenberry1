@@ -1,0 +1,2420 @@
+
+
+<!DOCTYPE html>
+
+
+<html >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Intro to geopandas: The very basics &#8212; Exploring Environmental Data in Python</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'geopandas_intro';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Welcome to your Jupyter Book" href="intro.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="None"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to your Jupyter Book
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Python Fundamentals</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Intro to geopandas: The very basics</a></li>
+
+
+
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2Fgeopandas_intro.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/geopandas_intro.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Intro to geopandas: The very basics</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Intro to geopandas: The very basics</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-library-create-and-environment-if-needed">Load the library, create and environment if needed</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-geopandas-first-let-s-load-some-very-basic-natural-earth-data">Basic geopandas: First let’s load some very basic Natural Earth data</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#can-also-do-pandas-plot-methods-with-geopandas">Can also do pandas plot methods with geopandas:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#or-with-seaborn">Or with seaborn:</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#some-basic-choropleth-plots">Some Basic “Choropleth” Plots!</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#recall-crs-and-centroids">Recall CRS and Centroids</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-add-some-cities">Let’s add some cities</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make-your-own-points-geodataframe">Make your own points/GeoDataFrame</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make-and-plot-polygon-geometries">Make and plot polygon geometries…</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <div class="section" id="intro-to-geopandas-the-very-basics">
+<h1>Intro to geopandas: The very basics<a class="headerlink" href="#intro-to-geopandas-the-very-basics" title="Permalink to this headline">#</a></h1>
+<ul class="simple">
+<li><p>Fundamentals</p></li>
+<li><p>Basic choropleth plots</p></li>
+<li><p>Centroids and projections</p></li>
+<li><p>Points and polygons</p></li>
+</ul>
+<img src="geopanda_pic.png" alt="drawing" style="width:200px;"/></div>
+<div class="section" id="load-the-library-create-and-environment-if-needed">
+<h1>Load the library, create and environment if needed<a class="headerlink" href="#load-the-library-create-and-environment-if-needed" title="Permalink to this headline">#</a></h1>
+<ul class="simple">
+<li><p>Load as gpd as below…</p></li>
+<li><p>As before, may need to create an new environment to use geopandas…</p></li>
+<li><p>To create a new environment:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#To make a new environment and install packages in the terminal:</span>
+<span class="c1">#Uncomment if you actually want to do this</span>
+
+<span class="c1">#conda create -n my_env</span>
+<span class="c1">#conda activate my_env</span>
+<span class="c1">#conda config --env --add channels conda-forge</span>
+<span class="c1">#conda config --env --set channel_priority strict</span>
+<span class="c1">#conda install &lt;my_package&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Now load geopandas plus other standard libraries</span>
+<span class="c1">#####</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\steff\AppData\Local\Temp\ipykernel_32268\2730060491.py:8: UserWarning: Shapely 2.0 is installed, but because PyGEOS is also installed, GeoPandas will still use PyGEOS by default for now. To force to use and test Shapely 2.0, you have to set the environment variable USE_PYGEOS=0. You can do this before starting the Python process, or in your code before importing geopandas:
+
+import os
+os.environ[&#39;USE_PYGEOS&#39;] = &#39;0&#39;
+import geopandas
+
+In a future release, GeoPandas will switch to using Shapely by default. If you are using PyGEOS directly (calling PyGEOS functions on geometries from GeoPandas), this will then stop working and you are encouraged to migrate from PyGEOS to Shapely 2.0 (https://shapely.readthedocs.io/en/latest/migration_pygeos.html).
+  import geopandas as gpd
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="basic-geopandas-first-let-s-load-some-very-basic-natural-earth-data">
+<h1>Basic geopandas: First let’s load some very basic Natural Earth data<a class="headerlink" href="#basic-geopandas-first-let-s-load-some-very-basic-natural-earth-data" title="Permalink to this headline">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#First, load the basic data from Natural Earth</span>
+<span class="c1">#Can get many other local or remote datasets, start with this...</span>
+<span class="c1">#&quot;gdf&quot; is a common generic variable name = GeoDataFrame</span>
+<span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">gpd</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;naturalearth_lowres&#39;</span><span class="p">))</span>
+
+<span class="c1">#Note that geopandas has three built-in datasets that you can use to test with</span>
+<span class="c1">#Check using this command:</span>
+<span class="n">display</span><span class="p">(</span><span class="n">gpd</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">available</span><span class="p">)</span>
+
+<span class="c1">#And now let&#39;s display the GeoDataFrame using the head() method</span>
+<span class="c1">#Many of the same Pandas methods, etc. for DataFrames work with GeoDataFrames</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">gdf</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="c1">#Could also show the last five</span>
+<span class="c1">#gdf.tail()</span>
+
+<span class="c1">#Or, say, the first 15:</span>
+<span class="c1">#gdf.head(15)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;naturalearth_cities&#39;, &#39;naturalearth_lowres&#39;, &#39;nybb&#39;]
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pop_est</th>
+      <th>continent</th>
+      <th>name</th>
+      <th>iso_a3</th>
+      <th>gdp_md_est</th>
+      <th>geometry</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>889953.0</td>
+      <td>Oceania</td>
+      <td>Fiji</td>
+      <td>FJI</td>
+      <td>5496</td>
+      <td>MULTIPOLYGON (((180.00000 -16.06713, 180.00000...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>58005463.0</td>
+      <td>Africa</td>
+      <td>Tanzania</td>
+      <td>TZA</td>
+      <td>63177</td>
+      <td>POLYGON ((33.90371 -0.95000, 34.07262 -1.05982...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>603253.0</td>
+      <td>Africa</td>
+      <td>W. Sahara</td>
+      <td>ESH</td>
+      <td>907</td>
+      <td>POLYGON ((-8.66559 27.65643, -8.66512 27.58948...</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>37589262.0</td>
+      <td>North America</td>
+      <td>Canada</td>
+      <td>CAN</td>
+      <td>1736425</td>
+      <td>MULTIPOLYGON (((-122.84000 49.00000, -122.9742...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>328239523.0</td>
+      <td>North America</td>
+      <td>United States of America</td>
+      <td>USA</td>
+      <td>21433226</td>
+      <td>MULTIPOLYGON (((-122.84000 49.00000, -120.0000...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#And for the most basic of plots...</span>
+<span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
+</pre></div>
+</div>
+<img alt="_images/1e1ebacb254e23cdb8032e6bfc30590c3190684052177d496045deacf1dd9bb5.png" src="_images/1e1ebacb254e23cdb8032e6bfc30590c3190684052177d496045deacf1dd9bb5.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Note that we can use the same pandas plotting stuff as for standard DataFrames:</span>
+<span class="c1">####</span>
+
+<span class="c1">#Do a quick histogram of population:</span>
+<span class="n">fig1</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;pop_est&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
+</pre></div>
+</div>
+<img alt="_images/efc314ec3c6d56c55ed17a9339658da13feeeef1ba44e807d2895fc75ec53294.png" src="_images/efc314ec3c6d56c55ed17a9339658da13feeeef1ba44e807d2895fc75ec53294.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Could also do:</span>
+<span class="n">fig1</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;pop_est&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;hist&#39;</span><span class="p">,</span> <span class="n">bins</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: ylabel=&#39;Frequency&#39;&gt;
+</pre></div>
+</div>
+<img alt="_images/631df1169184639f68c0788dabd7b1fb581d47b38be7347c0dc588eadf5f3e60.png" src="_images/631df1169184639f68c0788dabd7b1fb581d47b38be7347c0dc588eadf5f3e60.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#What are our apparent outliers?</span>
+<span class="n">gdf</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;pop_est&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pop_est</th>
+      <th>continent</th>
+      <th>name</th>
+      <th>iso_a3</th>
+      <th>gdp_md_est</th>
+      <th>geometry</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>139</th>
+      <td>1.397715e+09</td>
+      <td>Asia</td>
+      <td>China</td>
+      <td>CHN</td>
+      <td>14342903</td>
+      <td>MULTIPOLYGON (((109.47521 18.19770, 108.65521 ...</td>
+    </tr>
+    <tr>
+      <th>98</th>
+      <td>1.366418e+09</td>
+      <td>Asia</td>
+      <td>India</td>
+      <td>IND</td>
+      <td>2868929</td>
+      <td>POLYGON ((97.32711 28.26158, 97.40256 27.88254...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>3.282395e+08</td>
+      <td>North America</td>
+      <td>United States of America</td>
+      <td>USA</td>
+      <td>21433226</td>
+      <td>MULTIPOLYGON (((-122.84000 49.00000, -120.0000...</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2.706256e+08</td>
+      <td>Asia</td>
+      <td>Indonesia</td>
+      <td>IDN</td>
+      <td>1119190</td>
+      <td>MULTIPOLYGON (((141.00021 -2.60015, 141.01706 ...</td>
+    </tr>
+    <tr>
+      <th>102</th>
+      <td>2.165653e+08</td>
+      <td>Asia</td>
+      <td>Pakistan</td>
+      <td>PAK</td>
+      <td>278221</td>
+      <td>POLYGON ((77.83745 35.49401, 76.87172 34.65354...</td>
+    </tr>
+    <tr>
+      <th>29</th>
+      <td>2.110495e+08</td>
+      <td>South America</td>
+      <td>Brazil</td>
+      <td>BRA</td>
+      <td>1839758</td>
+      <td>POLYGON ((-53.37366 -33.76838, -53.65054 -33.2...</td>
+    </tr>
+    <tr>
+      <th>56</th>
+      <td>2.009636e+08</td>
+      <td>Africa</td>
+      <td>Nigeria</td>
+      <td>NGA</td>
+      <td>448120</td>
+      <td>POLYGON ((2.69170 6.25882, 2.74906 7.87073, 2....</td>
+    </tr>
+    <tr>
+      <th>99</th>
+      <td>1.630462e+08</td>
+      <td>Asia</td>
+      <td>Bangladesh</td>
+      <td>BGD</td>
+      <td>302571</td>
+      <td>POLYGON ((92.67272 22.04124, 92.65226 21.32405...</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>1.443735e+08</td>
+      <td>Europe</td>
+      <td>Russia</td>
+      <td>RUS</td>
+      <td>1699876</td>
+      <td>MULTIPOLYGON (((180.00000 71.51571, 180.00000 ...</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>1.275755e+08</td>
+      <td>North America</td>
+      <td>Mexico</td>
+      <td>MEX</td>
+      <td>1268870</td>
+      <td>POLYGON ((-117.12776 32.53534, -115.99135 32.6...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="section" id="can-also-do-pandas-plot-methods-with-geopandas">
+<h2>Can also do pandas plot methods with geopandas:<a class="headerlink" href="#can-also-do-pandas-plot-methods-with-geopandas" title="Permalink to this headline">#</a></h2>
+<p>Use <em><code class="docutils literal notranslate"><span class="pre">kind</span></code></em> keyword argument with <code class="docutils literal notranslate"><span class="pre">plot()</span></code> method. Recall options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bar</span></code> or <code class="docutils literal notranslate"><span class="pre">barh</span></code> for bar plots</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hist</span></code> for histogram</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">box</span></code> for boxplot</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kde</span></code> or <code class="docutils literal notranslate"><span class="pre">density</span></code> for density plots</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">area</span></code> for area plots</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">scatter</span></code> for scatter plots</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">hexbin</span></code> for hexagonal bin plots</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pie</span></code> for pie plots</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#For example, a customized boxplot with pandas plotting:</span>
+<span class="c1">#Population and gpd by continent</span>
+
+<span class="c1">#Set up our properties...</span>
+<span class="n">boxprops</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">linewidth</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">whiskerprops</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">linestyle</span> <span class="o">=</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="c1">#boxprops = dict(linewidth = 3, color = &#39;black&#39;)</span>
+<span class="n">capprops</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">linewidth</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">flierprops</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">markeredgewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">markeredgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">markerfacecolor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">medianprops</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">linewidth</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span> <span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+
+<span class="c1">#And plot!</span>
+<span class="c1">##########</span>
+<span class="n">fig1</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="c1">#Do both pop_est and gdp_md_est</span>
+<span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">column</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;pop_est&quot;</span><span class="p">,</span> <span class="s2">&quot;gdp_md_est&quot;</span><span class="p">],</span> <span class="n">by</span> <span class="o">=</span> <span class="s2">&quot;continent&quot;</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">showmeans</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+            <span class="n">boxprops</span> <span class="o">=</span> <span class="n">boxprops</span><span class="p">,</span>
+            <span class="n">whiskerprops</span> <span class="o">=</span> <span class="n">whiskerprops</span><span class="p">,</span>
+            <span class="n">capprops</span> <span class="o">=</span> <span class="n">capprops</span><span class="p">,</span>
+            <span class="n">flierprops</span> <span class="o">=</span> <span class="n">flierprops</span><span class="p">,</span>
+            <span class="n">medianprops</span> <span class="o">=</span> <span class="n">medianprops</span><span class="p">,</span>
+            <span class="n">rot</span> <span class="o">=</span> <span class="mi">90</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">);</span>
+
+<span class="c1">#Try with vs. without log scale</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\steff\AppData\Local\Temp\ipykernel_32268\25320454.py:17: UserWarning: To output multiple subplots, the figure containing the passed axes is being cleared.
+  ax2, ax3 = gdf.boxplot(column = [&quot;pop_est&quot;, &quot;gdp_md_est&quot;], by = &quot;continent&quot;, ax = ax1, showmeans=True,
+</pre></div>
+</div>
+<img alt="_images/705f84b0cb31f454855eb7faa6fab520f82a9e05c80af72aa7fa107205484290.png" src="_images/705f84b0cb31f454855eb7faa6fab520f82a9e05c80af72aa7fa107205484290.png" />
+</div>
+</div>
+</div>
+<div class="section" id="or-with-seaborn">
+<h2>Or with seaborn:<a class="headerlink" href="#or-with-seaborn" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="n">fig1</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">gdf</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;continent&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s1">&#39;pop_est&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s1">&#39;log&#39;</span><span class="p">);</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">ax1</span><span class="o">.</span><span class="n">get_xticks</span><span class="p">(),</span> <span class="n">ax1</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">(),</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;right&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/ac8cbe6734b6457759f2e256b2e9a63da3b0b9327f381d7d0b9df0ae6cca48ce.png" src="_images/ac8cbe6734b6457759f2e256b2e9a63da3b0b9327f381d7d0b9df0ae6cca48ce.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="some-basic-choropleth-plots">
+<h1>Some Basic “Choropleth” Plots!<a class="headerlink" href="#some-basic-choropleth-plots" title="Permalink to this headline">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Let&#39;s plot with some random counties NaNed</span>
+<span class="c1">##########</span>
+
+<span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">gpd</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;naturalearth_lowres&#39;</span><span class="p">))</span>
+
+<span class="c1">#Exclude Antarctica</span>
+<span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gdf</span><span class="o">.</span><span class="n">continent</span> <span class="o">!=</span> <span class="s1">&#39;Antarctica&#39;</span><span class="p">]</span>
+
+
+<span class="c1">#Take 20 countries, set population to nan</span>
+<span class="c1">#gdf.loc[np.random.choice(gdf.index, 20), &#39;pop_est&#39;] = np.nan</span>
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+
+<span class="c1">#Note: scheme + k</span>
+<span class="c1">#edgecolor: &quot;black&quot;, etc. vs. &quot;face&quot;</span>
+<span class="c1">#missing_kwds, legend, and legend_kwds</span>
+
+<span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s2">&quot;quantiles&quot;</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;pop_est&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span>
+           <span class="n">missing_kwds</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;lightgrey&quot;</span><span class="p">,</span> <span class="s2">&quot;edgecolor&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;hatch&quot;</span><span class="p">:</span> <span class="s2">&quot;//////&quot;</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span><span class="p">:</span> <span class="s2">&quot;Missing values&quot;</span><span class="p">},</span>
+           <span class="n">legend</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">legend_kwds</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;loc&#39;</span><span class="p">:</span> <span class="s1">&#39;lower left&#39;</span><span class="p">})</span> 
+
+
+<span class="c1">#Set some axis stuff</span>
+<span class="c1">#ax1.set_xticks([])</span>
+<span class="c1">#ax1.set_yticks([])</span>
+
+<span class="c1">#Or could just:</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/ccf10803ffcfabd169f7c7131818eb17cada3fbd1738be8791e98b90914b3bcd.png" src="_images/ccf10803ffcfabd169f7c7131818eb17cada3fbd1738be8791e98b90914b3bcd.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span> <span class="n">gdf</span><span class="o">.</span><span class="n">total_bounds</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([-180.     ,  -55.61183,  180.     ,   83.64513])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Let&#39;s plot each continent in its own subfigure</span>
+<span class="c1">#Have 8 continents, including open ocean</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+<span class="c1">#Pythonic iteration though the continents</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">gdf</span><span class="o">.</span><span class="n">continent</span><span class="o">.</span><span class="n">unique</span><span class="p">()):</span>
+
+    <span class="c1">#Plot...</span>
+    <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;continent&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;pop_est&#39;</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;jet&#39;</span><span class="p">,</span>
+                                       <span class="n">missing_kwds</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;lightgrey&quot;</span><span class="p">,</span> <span class="s2">&quot;edgecolor&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span> <span class="s2">&quot;hatch&quot;</span><span class="p">:</span> <span class="s2">&quot;///</span><span class="se">\\\\\\</span><span class="s2">&quot;</span><span class="p">})</span>
+
+    <span class="c1">#Set title</span>
+    <span class="n">ax1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+    
+    
+    <span class="c1">#Let&#39;s set x and y lim to the overall gdf bounds</span>
+    <span class="c1">#Unpack:</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">total_bounds</span>
+    
+    <span class="c1">#And set horizontal:</span>
+    <span class="n">ax1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">])</span>
+    
+    <span class="c1">#Give a little extra vertical:</span>
+    <span class="n">ax1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">y1</span><span class="o">*</span><span class="mf">1.1</span><span class="p">,</span> <span class="n">y2</span><span class="o">*</span><span class="mf">1.1</span><span class="p">])</span>
+    
+    
+    <span class="c1">#Remove the tick markers</span>
+    <span class="n">ax1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([])</span>
+    <span class="n">ax1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+
+    <span class="c1">#Could try setting aspect ratio:</span>
+    <span class="c1">#ax1[i].set_aspect(4.0) #&#39;equal&#39;)</span>
+    
+<span class="n">ax1</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+<span class="n">ax1</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/838ad70754179b951e9fee1fac7534b0c75aa5134cb5e752caa22f8637bced45.png" src="_images/838ad70754179b951e9fee1fac7534b0c75aa5134cb5e752caa22f8637bced45.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Some more basic choropleth plots</span>
+<span class="c1">####################</span>
+
+<span class="c1">#Reload to remove NaNs:</span>
+<span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">gpd</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;naturalearth_lowres&#39;</span><span class="p">))</span>
+
+<span class="c1">#Exclude Antarctica</span>
+<span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gdf</span><span class="o">.</span><span class="n">continent</span><span class="o">!=</span><span class="s1">&#39;Antarctica&#39;</span><span class="p">]</span>
+
+<span class="c1">#Make a gpd per capita column:</span>
+<span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;gpd_per_cap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">gdp_md_est</span> <span class="o">/</span> <span class="n">gdf</span><span class="o">.</span><span class="n">pop_est</span>
+
+
+<span class="c1">#Do a bunch of figures!</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+
+
+<span class="c1">#Population</span>
+<span class="c1">#####</span>
+<span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;pop_est&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;Reds&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Population&#39;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">();</span>
+
+<span class="c1">#GDP</span>
+<span class="c1">#####</span>
+<span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;gdp_md_est&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;viridis&#39;</span><span class="p">,</span>
+         <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;quantiles&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;GDP, scheme = quantiles&#39;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">();</span>
+
+<span class="c1">#GDP per Capita</span>
+<span class="c1">#####</span>
+<span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;gpd_per_cap&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">.5</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;GPD per capita, alpha = .5&#39;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">();</span>
+
+<span class="c1">#Population, just the Boundaries</span>
+<span class="c1">#####</span>
+<span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;pop_est&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;viridis&#39;</span><span class="p">,</span>
+         <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;quantiles&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Population, Boundaries Only&#39;</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">();</span>
+
+
+<span class="c1">#And adjust our subplots to be closer together</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">wspace</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/2588b11db99033f581833204069f7792050a9cad72278cc5a3222ca8130fe6b9.png" src="_images/2588b11db99033f581833204069f7792050a9cad72278cc5a3222ca8130fe6b9.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gdf</span><span class="o">.</span><span class="n">continent</span><span class="o">==</span><span class="s1">&#39;Europe&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span> <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;pop_est&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;viridis&#39;</span><span class="p">,</span>
+         <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;quantiles&#39;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
+</pre></div>
+</div>
+<img alt="_images/674fd4b4170372241d06f211139a35f6bf59e89839a6343096c99b7941a346f2.png" src="_images/674fd4b4170372241d06f211139a35f6bf59e89839a6343096c99b7941a346f2.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gdf</span><span class="o">.</span><span class="n">continent</span><span class="o">==</span><span class="s1">&#39;North America&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span> <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;pop_est&#39;</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;viridis&#39;</span><span class="p">,</span>
+         <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;quantiles&#39;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
+</pre></div>
+</div>
+<img alt="_images/7ba623f3e64bacede62e22faaa279403bb29f321a4bd85bc78c64fb2d0aacce4.png" src="_images/7ba623f3e64bacede62e22faaa279403bb29f321a4bd85bc78c64fb2d0aacce4.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Note, we don&#39;t actually need to create a new column/variable:</span>
+<span class="c1">#Note also vmax and vmin</span>
+<span class="c1">#####</span>
+
+<span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span> <span class="n">column</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">gdp_md_est</span> <span class="o">/</span> <span class="n">gdf</span><span class="o">.</span><span class="n">pop_est</span><span class="p">,</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;viridis&#39;</span><span class="p">,</span>
+         <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;quantiles&#39;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
+</pre></div>
+</div>
+<img alt="_images/19a07629d3e3d9ce49e283bf767dbf7358406a3b65fddbf72367deb42f9b1574.png" src="_images/19a07629d3e3d9ce49e283bf767dbf7358406a3b65fddbf72367deb42f9b1574.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Log scale</span>
+<span class="c1">###########</span>
+
+<span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">16</span><span class="p">),</span> <span class="n">column</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">gdf</span><span class="o">.</span><span class="n">pop_est</span><span class="p">),</span> <span class="n">linewidth</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;jet&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
+</pre></div>
+</div>
+<img alt="_images/cc6c12112b35e9ee9a1acd04b9da4ebacbc71ad70a57e392c1b68e2bc719a7db.png" src="_images/cc6c12112b35e9ee9a1acd04b9da4ebacbc71ad70a57e392c1b68e2bc719a7db.png" />
+</div>
+</div>
+</div>
+<div class="section" id="recall-crs-and-centroids">
+<h1>Recall CRS and Centroids<a class="headerlink" href="#recall-crs-and-centroids" title="Permalink to this headline">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Plot each country centroid under different CRS</span>
+<span class="c1">############################</span>
+
+<span class="n">gdf</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">gpd</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;naturalearth_lowres&#39;</span><span class="p">))</span>
+
+<span class="c1">#Drop Antarctica again:</span>
+<span class="n">gdf</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gdf</span><span class="o">.</span><span class="n">continent</span><span class="o">!=</span><span class="s1">&#39;Antarctica&#39;</span><span class="p">]</span>
+
+<span class="c1">#First, just look at default CRS:</span>
+<span class="n">gdf</span><span class="o">.</span><span class="n">crs</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Geographic 2D CRS: EPSG:4326&gt;
+Name: WGS 84
+Axis Info [ellipsoidal]:
+- Lat[north]: Geodetic latitude (degree)
+- Lon[east]: Geodetic longitude (degree)
+Area of Use:
+- name: World.
+- bounds: (-180.0, -90.0, 180.0, 90.0)
+Datum: World Geodetic System 1984 ensemble
+- Ellipsoid: WGS 84
+- Prime Meridian: Greenwich
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Now plot with centroids...</span>
+<span class="c1">####</span>
+
+<span class="c1">#Try a few different CRS EPSG codes:</span>
+<span class="c1">#4326 = Geographic 2D, WGS 84 Daturm</span>
+<span class="c1">#4269 = Geographic 2D, NAD83 Datum</span>
+<span class="c1">#3857 = Mercator (Cylindrical projection)</span>
+<span class="c1">#5070 = North American Albers Equal Area (Conic)</span>
+<span class="c1">#6933 = Equal-Area Cylindrical</span>
+<span class="c1">#3035 = Lambert Azimuthal Equal Area centered on Europe (Azimuthal/Planar)</span>
+
+<span class="c1">#################</span>
+<span class="c1">#gdf = gdf.to_crs(5070) </span>
+
+<span class="c1">#Copy and get centroids:</span>
+<span class="c1">#################</span>
+<span class="n">gdf</span><span class="p">[</span><span class="s1">&#39;centroid_column&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">centroid</span>
+
+<span class="n">gdf2</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1">#We can set geometry:</span>
+<span class="n">gdf2</span> <span class="o">=</span> <span class="n">gdf2</span><span class="o">.</span><span class="n">set_geometry</span><span class="p">(</span><span class="s1">&#39;centroid_column&#39;</span><span class="p">)</span>
+
+
+<span class="n">fig1</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+
+<span class="c1">#Try changing scheme:</span>
+<span class="c1">###</span>
+
+<span class="c1">#Plot polygons:</span>
+<span class="c1">######</span>
+<span class="n">gdf</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;pop_est&#39;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">.5</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Reds&#39;</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;fisherjenks&#39;</span><span class="p">)</span>
+
+<span class="c1">#Plot centroids:</span>
+<span class="c1">#######</span>
+<span class="n">gdf2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;pop_est&#39;</span><span class="p">,</span> <span class="n">markersize</span> <span class="o">=</span> <span class="n">gdf2</span><span class="o">.</span><span class="n">pop_est</span> <span class="o">/</span> <span class="mf">3e5</span><span class="p">,</span>
+          <span class="n">alpha</span> <span class="o">=</span> <span class="mf">.7</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Reds&#39;</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;fisherjenks&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\steff\AppData\Local\Temp\ipykernel_32268\1510840885.py:17: UserWarning: Geometry is in a geographic CRS. Results from &#39;centroid&#39; are likely incorrect. Use &#39;GeoSeries.to_crs()&#39; to re-project geometries to a projected CRS before this operation.
+
+  gdf[&#39;centroid_column&#39;] = gdf.centroid
+</pre></div>
+</div>
+<img alt="_images/b7071ebb0298b0d881c6248d222cfa56435e223aa769f612045c69da6e404d15.png" src="_images/b7071ebb0298b0d881c6248d222cfa56435e223aa769f612045c69da6e404d15.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#For 5070, filter to just North America</span>
+<span class="c1">#########</span>
+
+<span class="n">gdf_na</span> <span class="o">=</span> <span class="n">gdf</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">gdf</span><span class="o">.</span><span class="n">continent</span> <span class="o">==</span> <span class="s1">&#39;North America&#39;</span><span class="p">]</span>
+
+<span class="n">gdf_na</span> <span class="o">=</span> <span class="n">gdf_na</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="mi">5070</span><span class="p">)</span> 
+<span class="n">gdf_na</span><span class="p">[</span><span class="s1">&#39;centroid_column&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf_na</span><span class="o">.</span><span class="n">centroid</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">gdf_na</span><span class="o">.</span><span class="n">crs</span><span class="p">)</span>
+
+<span class="c1">#And plot:</span>
+<span class="c1">#Plot polygons:</span>
+<span class="c1">######</span>
+<span class="n">fig1</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+
+<span class="n">gdf_na</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;pop_est&#39;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">.5</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;fisherjenks&#39;</span><span class="p">)</span>
+
+<span class="c1">#Plot centroids:</span>
+<span class="c1">#######</span>
+<span class="n">gdf_na</span><span class="o">=</span> <span class="n">gdf_na</span><span class="o">.</span><span class="n">set_geometry</span><span class="p">(</span><span class="s1">&#39;centroid_column&#39;</span><span class="p">)</span>
+<span class="n">gdf_na</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="s1">&#39;pop_est&#39;</span><span class="p">,</span> <span class="n">markersize</span> <span class="o">=</span> <span class="n">gdf_na</span><span class="o">.</span><span class="n">pop_est</span> <span class="o">/</span> <span class="mf">2e5</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">.75</span><span class="p">,</span> <span class="n">edgecolor</span> <span class="o">=</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">scheme</span><span class="o">=</span><span class="s1">&#39;fisherjenks&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Derived Projected CRS: EPSG:5070&gt;
+Name: NAD83 / Conus Albers
+Axis Info [cartesian]:
+- X[east]: Easting (metre)
+- Y[north]: Northing (metre)
+Area of Use:
+- name: United States (USA) - CONUS onshore - Alabama; Arizona; Arkansas; California; Colorado; Connecticut; Delaware; Florida; Georgia; Idaho; Illinois; Indiana; Iowa; Kansas; Kentucky; Louisiana; Maine; Maryland; Massachusetts; Michigan; Minnesota; Mississippi; Missouri; Montana; Nebraska; Nevada; New Hampshire; New Jersey; New Mexico; New York; North Carolina; North Dakota; Ohio; Oklahoma; Oregon; Pennsylvania; Rhode Island; South Carolina; South Dakota; Tennessee; Texas; Utah; Vermont; Virginia; Washington; West Virginia; Wisconsin; Wyoming.
+- bounds: (-124.79, 24.41, -66.91, 49.38)
+Coordinate Operation:
+- name: Conus Albers
+- method: Albers Equal Area
+Datum: North American Datum 1983
+- Ellipsoid: GRS 1980
+- Prime Meridian: Greenwich
+</pre></div>
+</div>
+<img alt="_images/f6e8b29eefd50d09e5209b7b26adc53c85e2f6fec67dc5d19bc13723d4bcbb6a.png" src="_images/f6e8b29eefd50d09e5209b7b26adc53c85e2f6fec67dc5d19bc13723d4bcbb6a.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf_na</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pop_est</th>
+      <th>continent</th>
+      <th>name</th>
+      <th>iso_a3</th>
+      <th>gdp_md_est</th>
+      <th>geometry</th>
+      <th>centroid_column</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3</th>
+      <td>37589262.0</td>
+      <td>North America</td>
+      <td>Canada</td>
+      <td>CAN</td>
+      <td>1736425</td>
+      <td>MULTIPOLYGON (((-1962161.370 3167162.825, -197...</td>
+      <td>POINT (-52612.028 4027401.125)</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>328239523.0</td>
+      <td>North America</td>
+      <td>United States of America</td>
+      <td>USA</td>
+      <td>21433226</td>
+      <td>MULTIPOLYGON (((-1962161.370 3167162.825, -175...</td>
+      <td>POINT (-695248.110 2428086.199)</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>11263077.0</td>
+      <td>North America</td>
+      <td>Haiti</td>
+      <td>HTI</td>
+      <td>14332</td>
+      <td>POLYGON ((2599686.623 -20735.583, 2623645.093 ...</td>
+      <td>POINT (2521426.968 -130454.514)</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>10738958.0</td>
+      <td>North America</td>
+      <td>Dominican Rep.</td>
+      <td>DOM</td>
+      <td>88941</td>
+      <td>POLYGON ((2645213.400 -193211.750, 2640081.798...</td>
+      <td>POINT (2753876.447 -70939.400)</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>389482.0</td>
+      <td>North America</td>
+      <td>Bahamas</td>
+      <td>BHS</td>
+      <td>13578</td>
+      <td>MULTIPOLYGON (((1694883.783 566750.173, 173955...</td>
+      <td>POINT (1824998.091 447876.674)</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>56225.0</td>
+      <td>North America</td>
+      <td>Greenland</td>
+      <td>GRL</td>
+      <td>3051</td>
+      <td>POLYGON ((2069937.291 6297690.102, 2185915.338...</td>
+      <td>POINT (2561115.782 5937257.834)</td>
+    </tr>
+    <tr>
+      <th>27</th>
+      <td>127575529.0</td>
+      <td>North America</td>
+      <td>Mexico</td>
+      <td>MEX</td>
+      <td>1268870</td>
+      <td>POLYGON ((-1957421.540 1269943.080, -1851945.2...</td>
+      <td>POINT (-634805.296 132619.458)</td>
+    </tr>
+    <tr>
+      <th>33</th>
+      <td>4246439.0</td>
+      <td>North America</td>
+      <td>Panama</td>
+      <td>PAN</td>
+      <td>66800</td>
+      <td>POLYGON ((2229538.892 -1287783.805, 2218076.28...</td>
+      <td>POINT (1905549.784 -1359972.602)</td>
+    </tr>
+    <tr>
+      <th>34</th>
+      <td>5047561.0</td>
+      <td>North America</td>
+      <td>Costa Rica</td>
+      <td>CRI</td>
+      <td>61801</td>
+      <td>POLYGON ((1600790.629 -1302874.019, 1556319.63...</td>
+      <td>POINT (1403440.356 -1287748.656)</td>
+    </tr>
+    <tr>
+      <th>35</th>
+      <td>6545502.0</td>
+      <td>North America</td>
+      <td>Nicaragua</td>
+      <td>NIC</td>
+      <td>12520</td>
+      <td>POLYGON ((1451405.902 -1181788.248, 1426166.09...</td>
+      <td>POINT (1268702.838 -1005438.639)</td>
+    </tr>
+    <tr>
+      <th>36</th>
+      <td>9746117.0</td>
+      <td>North America</td>
+      <td>Honduras</td>
+      <td>HND</td>
+      <td>25095</td>
+      <td>POLYGON ((1454080.299 -756870.502, 1415247.555...</td>
+      <td>POINT (1067338.890 -819516.847)</td>
+    </tr>
+    <tr>
+      <th>37</th>
+      <td>6453553.0</td>
+      <td>North America</td>
+      <td>El Salvador</td>
+      <td>SLV</td>
+      <td>27022</td>
+      <td>POLYGON ((757827.665 -888701.806, 792024.277 -...</td>
+      <td>POINT (818067.773 -957142.541)</td>
+    </tr>
+    <tr>
+      <th>38</th>
+      <td>16604026.0</td>
+      <td>North America</td>
+      <td>Guatemala</td>
+      <td>GTM</td>
+      <td>76710</td>
+      <td>POLYGON ((429858.907 -894685.573, 431433.529 -...</td>
+      <td>POINT (633750.859 -762476.303)</td>
+    </tr>
+    <tr>
+      <th>39</th>
+      <td>390353.0</td>
+      <td>North America</td>
+      <td>Belize</td>
+      <td>BLZ</td>
+      <td>1879</td>
+      <td>POLYGON ((756029.447 -531033.029, 754040.680 -...</td>
+      <td>POINT (809245.827 -592208.708)</td>
+    </tr>
+    <tr>
+      <th>45</th>
+      <td>3193694.0</td>
+      <td>North America</td>
+      <td>Puerto Rico</td>
+      <td>PRI</td>
+      <td>104988</td>
+      <td>POLYGON ((3203107.915 21858.507, 3259284.205 3...</td>
+      <td>POINT (3191578.051 -12789.915)</td>
+    </tr>
+    <tr>
+      <th>46</th>
+      <td>2948279.0</td>
+      <td>North America</td>
+      <td>Jamaica</td>
+      <td>JAM</td>
+      <td>16458</td>
+      <td>POLYGON ((2007133.556 -290425.151, 2081360.649...</td>
+      <td>POINT (2040888.888 -321917.704)</td>
+    </tr>
+    <tr>
+      <th>47</th>
+      <td>11333483.0</td>
+      <td>North America</td>
+      <td>Cuba</td>
+      <td>CUB</td>
+      <td>100023</td>
+      <td>POLYGON ((1426744.926 123762.263, 1516984.189 ...</td>
+      <td>POINT (1800419.326 17416.042)</td>
+    </tr>
+    <tr>
+      <th>175</th>
+      <td>1394973.0</td>
+      <td>North America</td>
+      <td>Trinidad and Tobago</td>
+      <td>TTO</td>
+      <td>24269</td>
+      <td>POLYGON ((3965670.777 -570548.469, 4024342.478...</td>
+      <td>POINT (4016322.504 -587538.187)</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">gdf_na</span><span class="o">.</span><span class="n">crs</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Derived Projected CRS: EPSG:5070&gt;
+Name: NAD83 / Conus Albers
+Axis Info [cartesian]:
+- X[east]: Easting (metre)
+- Y[north]: Northing (metre)
+Area of Use:
+- name: United States (USA) - CONUS onshore - Alabama; Arizona; Arkansas; California; Colorado; Connecticut; Delaware; Florida; Georgia; Idaho; Illinois; Indiana; Iowa; Kansas; Kentucky; Louisiana; Maine; Maryland; Massachusetts; Michigan; Minnesota; Mississippi; Missouri; Montana; Nebraska; Nevada; New Hampshire; New Jersey; New Mexico; New York; North Carolina; North Dakota; Ohio; Oklahoma; Oregon; Pennsylvania; Rhode Island; South Carolina; South Dakota; Tennessee; Texas; Utah; Vermont; Virginia; Washington; West Virginia; Wisconsin; Wyoming.
+- bounds: (-124.79, 24.41, -66.91, 49.38)
+Coordinate Operation:
+- name: Conus Albers
+- method: Albers Equal Area
+Datum: North American Datum 1983
+- Ellipsoid: GRS 1980
+- Prime Meridian: Greenwich
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="let-s-add-some-cities">
+<h1>Let’s add some cities<a class="headerlink" href="#let-s-add-some-cities" title="Permalink to this headline">#</a></h1>
+<ul class="simple">
+<li><p>Now we’ll have a point geometry</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Get world borders again</span>
+<span class="n">world</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">gpd</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;naturalearth_lowres&#39;</span><span class="p">))</span>
+
+<span class="c1">#Now, get the cities!</span>
+<span class="n">cities</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="n">gpd</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">get_path</span><span class="p">(</span><span class="s1">&#39;naturalearth_cities&#39;</span><span class="p">))</span>
+
+<span class="c1">#Get rid of Antarctica</span>
+<span class="n">world</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">world</span><span class="o">.</span><span class="n">continent</span><span class="o">!=</span><span class="s1">&#39;Antarctica&#39;</span><span class="p">]</span>
+
+
+<span class="c1">#Confirm same CRS</span>
+<span class="n">display</span><span class="p">(</span><span class="n">world</span><span class="o">.</span><span class="n">crs</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">cities</span><span class="o">.</span><span class="n">crs</span><span class="p">)</span>
+
+<span class="c1">#See what cities is:</span>
+<span class="n">display</span><span class="p">(</span><span class="n">cities</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+
+<span class="c1">#Plot the cities and country borders</span>
+<span class="c1">######</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="c1">#Country backgrounds</span>
+<span class="n">world</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">facecolor</span> <span class="o">=</span> <span class="s1">&#39;lightgrey&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.75</span><span class="p">)</span> <span class="c1">#, zorder=2)</span>
+
+<span class="c1">#Cities</span>
+<span class="c1">#Note: Try changing the zorder for both plots</span>
+<span class="n">cities</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">markersize</span> <span class="o">=</span> <span class="mi">350</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+            <span class="n">alpha</span><span class="o">=</span><span class="mf">.7</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#, zorder=1);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Geographic 2D CRS: EPSG:4326&gt;
+Name: WGS 84
+Axis Info [ellipsoidal]:
+- Lat[north]: Geodetic latitude (degree)
+- Lon[east]: Geodetic longitude (degree)
+Area of Use:
+- name: World.
+- bounds: (-180.0, -90.0, 180.0, 90.0)
+Datum: World Geodetic System 1984 ensemble
+- Ellipsoid: WGS 84
+- Prime Meridian: Greenwich
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;Geographic 2D CRS: EPSG:4326&gt;
+Name: WGS 84
+Axis Info [ellipsoidal]:
+- Lat[north]: Geodetic latitude (degree)
+- Lon[east]: Geodetic longitude (degree)
+Area of Use:
+- name: World.
+- bounds: (-180.0, -90.0, 180.0, 90.0)
+Datum: World Geodetic System 1984 ensemble
+- Ellipsoid: WGS 84
+- Prime Meridian: Greenwich
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>name</th>
+      <th>geometry</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Vatican City</td>
+      <td>POINT (12.45339 41.90328)</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>San Marino</td>
+      <td>POINT (12.44177 43.93610)</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Vaduz</td>
+      <td>POINT (9.51667 47.13372)</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Lobamba</td>
+      <td>POINT (31.20000 -26.46667)</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Luxembourg</td>
+      <td>POINT (6.13000 49.61166)</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
+</pre></div>
+</div>
+<img alt="_images/ee40be8919628a8b2faaa3db50bd7f48a599f9c4dfc585469520558dd2ea553e.png" src="_images/ee40be8919628a8b2faaa3db50bd7f48a599f9c4dfc585469520558dd2ea553e.png" />
+</div>
+</div>
+<div class="section" id="make-your-own-points-geodataframe">
+<h2>Make your own points/GeoDataFrame<a class="headerlink" href="#make-your-own-points-geodataframe" title="Permalink to this headline">#</a></h2>
+<ul class="simple">
+<li><p>Create a random DataFrame of Points:</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Make a GeoDataFrame of N random points:</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;Name&#39;</span><span class="p">:</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="p">)))],</span>
+     <span class="s1">&#39;Latitude&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="o">-</span><span class="mi">89</span><span class="p">,</span> <span class="mi">89</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span>
+     <span class="s1">&#39;Longitude&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="n">N</span><span class="p">),</span>
+     <span class="s1">&#39;Value&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">N</span><span class="p">)})</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>-21</td>
+      <td>118</td>
+      <td>201.422573</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>-3</td>
+      <td>-161</td>
+      <td>286.127885</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>-54</td>
+      <td>44</td>
+      <td>241.913813</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>57</td>
+      <td>-93</td>
+      <td>130.584765</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>-24</td>
+      <td>0</td>
+      <td>231.295958</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Make a GeoDataFrame of N random points:</span>
+<span class="c1">#Create the GeoDataFrame</span>
+<span class="c1">#Always start with EPSG 4326 (or 4269):</span>
+<span class="n">gdf_point</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Value&#39;</span><span class="p">,</span> <span class="s1">&#39;Latitude&#39;</span><span class="p">,</span> <span class="s1">&#39;Longitude&#39;</span><span class="p">]],</span>
+            <span class="n">geometry</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">points_from_xy</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Longitude</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">Latitude</span><span class="p">),</span> <span class="n">crs</span> <span class="o">=</span> <span class="s2">&quot;EPSG:4326&quot;</span><span class="p">)</span>
+
+<span class="n">display</span><span class="p">(</span><span class="n">gdf_point</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>Value</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+      <th>geometry</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>201.422573</td>
+      <td>-21</td>
+      <td>118</td>
+      <td>POINT (118.00000 -21.00000)</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>286.127885</td>
+      <td>-3</td>
+      <td>-161</td>
+      <td>POINT (-161.00000 -3.00000)</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>241.913813</td>
+      <td>-54</td>
+      <td>44</td>
+      <td>POINT (44.00000 -54.00000)</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>130.584765</td>
+      <td>57</td>
+      <td>-93</td>
+      <td>POINT (-93.00000 57.00000)</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>4</td>
+      <td>231.295958</td>
+      <td>-24</td>
+      <td>0</td>
+      <td>POINT (0.00000 -24.00000)</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#And plot:</span>
+<span class="c1">#########</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+
+<span class="n">world</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">facecolor</span> <span class="o">=</span> <span class="s1">&#39;lightgrey&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">gdf_point</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">markersize</span> <span class="o">=</span> <span class="s1">&#39;Value&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.5</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/880185325bb02bb0a30411d2096d1c476baf9b062a9f9d6eedf0531bfe85d820.png" src="_images/880185325bb02bb0a30411d2096d1c476baf9b062a9f9d6eedf0531bfe85d820.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">### Add Text:</span>
+<span class="c1">########</span>
+
+<span class="c1">#Get our base plot:</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+
+<span class="n">world</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">facecolor</span> <span class="o">=</span> <span class="s1">&#39;lightgrey&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">gdf_point</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">markersize</span> <span class="o">=</span> <span class="mi">300</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">);</span>
+
+
+<span class="c1">#What if we didn&#39;t have Latitude/Longitude columns?</span>
+<span class="c1">#######</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">gdf_point</span><span class="o">.</span><span class="n">geometry</span><span class="p">):</span>
+    <span class="c1">#Observe:</span>
+    <span class="c1">#print(p.coords.xy[0][0])</span>
+    
+    <span class="c1">#Or just:</span>
+    <span class="c1">#print(p.x)</span>
+
+    <span class="c1">#Plot:</span>
+    <span class="n">text_str</span> <span class="o">=</span> <span class="n">gdf_point</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">Name</span>
+
+    <span class="n">ax1</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">text_str</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span>
+             <span class="n">bbox</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;facecolor&#39;</span><span class="p">:</span><span class="s1">&#39;white&#39;</span><span class="p">,</span><span class="s1">&#39;alpha&#39;</span><span class="p">:</span><span class="mf">.75</span><span class="p">,</span><span class="s1">&#39;edgecolor&#39;</span><span class="p">:</span><span class="s1">&#39;black&#39;</span><span class="p">,</span><span class="s1">&#39;pad&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">},</span>
+             <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/70885d03d354079ddc76dc19196b0c791a6ed2a5883ec7fbd9a23e6edbd841c2.png" src="_images/70885d03d354079ddc76dc19196b0c791a6ed2a5883ec7fbd9a23e6edbd841c2.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Make a GeoDataFrame with just a single point at ostensible geographic center of the contiguous US</span>
+<span class="c1">####39°50′N 98°35</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;Description&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;Geographic Center&#39;</span><span class="p">],</span>
+     <span class="s1">&#39;Latitude&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">39</span> <span class="o">+</span> <span class="mi">50</span><span class="o">/</span><span class="mi">60</span><span class="p">],</span>
+     <span class="s1">&#39;Longitude&#39;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="mi">98</span> <span class="o">+</span> <span class="mi">35</span><span class="o">/</span><span class="mi">60</span><span class="p">)]})</span>
+
+<span class="n">gdf_center</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">geometry</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">points_from_xy</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">Longitude</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">Latitude</span><span class="p">),</span> <span class="n">crs</span> <span class="o">=</span> <span class="s2">&quot;EPSG:4326&quot;</span><span class="p">)</span>
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">world</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">world</span><span class="p">[</span><span class="s1">&#39;iso_a3&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;USA&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">facecolor</span> <span class="o">=</span> <span class="s1">&#39;lightgrey&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">gdf_center</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">markersize</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/0c873adc9cf85c5995baac6ebb32877a915489f93d1f03c0e466def6fa06003b.png" src="_images/0c873adc9cf85c5995baac6ebb32877a915489f93d1f03c0e466def6fa06003b.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#And plot in N. Am. Albers:</span>
+<span class="c1">########</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">usa_map</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">world</span><span class="p">[</span><span class="s1">&#39;iso_a3&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;USA&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Convert to North American Albers:</span>
+<span class="n">usa_map</span> <span class="o">=</span> <span class="n">usa_map</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="mi">5070</span><span class="p">)</span>
+
+<span class="c1">#Convert Centroid:</span>
+<span class="n">gdf_center</span> <span class="o">=</span> <span class="n">gdf_center</span><span class="o">.</span><span class="n">to_crs</span><span class="p">(</span><span class="mi">5070</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="n">usa_map</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">gdf_center</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">markersize</span> <span class="o">=</span> <span class="mi">200</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;darkred&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/d0ada18c5e1132dee7f45f7a8a91c02edde9d26f5180778afaf770d3eaa5a4e3.png" src="_images/d0ada18c5e1132dee7f45f7a8a91c02edde9d26f5180778afaf770d3eaa5a4e3.png" />
+</div>
+</div>
+</div>
+<div class="section" id="make-and-plot-polygon-geometries">
+<h2>Make and plot polygon geometries…<a class="headerlink" href="#make-and-plot-polygon-geometries" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">###Let&#39;s calculate and visualize the land area needed to generate all US electricity from Solar</span>
+<span class="c1">#############</span>
+
+<span class="c1">#Do everything in kWh</span>
+
+<span class="c1">#Approx 2021 US electricity:</span>
+<span class="n">US_electricity</span> <span class="o">=</span> <span class="mf">4.116e12</span>
+
+<span class="c1">#Solar irradiance, in kWh m-2 over the year, averaged over US</span>
+<span class="n">S</span> <span class="o">=</span> <span class="mi">1800</span>
+
+<span class="c1">#Our solar efficiency, and a performance factor</span>
+<span class="n">E</span> <span class="o">=</span> <span class="mf">.18</span>
+<span class="n">PF</span> <span class="o">=</span> <span class="mf">.75</span>
+
+<span class="c1">#Energy over the year for a single square meter:</span>
+<span class="n">E_m2</span> <span class="o">=</span> <span class="n">S</span> <span class="o">*</span> <span class="n">E</span> <span class="o">*</span> <span class="n">PF</span>
+
+<span class="c1">#And now, required square meters:</span>
+<span class="n">m2_needed</span> <span class="o">=</span> <span class="n">US_electricity</span> <span class="o">/</span> <span class="n">E_m2</span>
+
+<span class="c1">#In square miles:</span>
+<span class="n">sqmile_needed</span> <span class="o">=</span> <span class="n">m2_needed</span> <span class="o">*</span> <span class="mf">3.86102e-7</span>
+<span class="n">sqmile_needed</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>6539.900543209877
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Is this a lot?</span>
+<span class="c1">#Various areas in square miles:</span>
+<span class="c1">######</span>
+
+<span class="n">Lower48_area</span> <span class="o">=</span> <span class="mf">3.1199e6</span>
+<span class="n">US_area</span> <span class="o">=</span> <span class="mf">3.797e6</span>
+<span class="n">Maricopa_area</span> <span class="o">=</span> <span class="mi">9223</span>
+
+<span class="n">sqmile_needed</span> <span class="o">/</span> <span class="n">US_area</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0017223862373478738
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#And let&#39;s make a polygon...</span>
+
+<span class="c1">#Get a shapely Polygon</span>
+<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Polygon</span>
+
+<span class="c1">#Just make a square with the area of m2_needed</span>
+<span class="n">val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">m2_needed</span><span class="p">)</span>
+
+
+<span class="c1">#Use &quot;geographic center&quot; for base x/y</span>
+<span class="n">x_base</span> <span class="o">=</span> <span class="n">gdf_center</span><span class="o">.</span><span class="n">geometry</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">val</span><span class="o">/</span><span class="mi">2</span> <span class="c1">#-1.5e6</span>
+<span class="n">y_base</span> <span class="o">=</span> <span class="n">gdf_center</span><span class="o">.</span><span class="n">geometry</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">val</span><span class="o">/</span><span class="mi">2</span> <span class="c1">#1.5e6</span>
+
+
+<span class="c1">#And make our polygon:</span>
+<span class="c1">#####</span>
+<span class="n">lon_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_base</span><span class="p">,</span> <span class="n">x_base</span><span class="o">+</span><span class="n">val</span><span class="p">,</span> <span class="n">x_base</span><span class="o">+</span><span class="n">val</span><span class="p">,</span> <span class="n">x_base</span><span class="p">]</span>
+<span class="n">lat_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">y_base</span><span class="p">,</span> <span class="n">y_base</span><span class="p">,</span> <span class="n">y_base</span><span class="o">+</span><span class="n">val</span><span class="p">,</span> <span class="n">y_base</span><span class="o">+</span><span class="n">val</span><span class="p">]</span>
+
+<span class="n">polygon_geom</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">lon_list</span><span class="p">,</span> <span class="n">lat_list</span><span class="p">))</span>
+
+
+<span class="c1">#And put into a GeoDataFrame:</span>
+<span class="n">crs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;init&#39;</span><span class="p">:</span> <span class="s1">&#39;epsg:5070&#39;</span><span class="p">}</span> <span class="c1">#Can just use 5070 also</span>
+<span class="n">solar_rect</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">crs</span><span class="o">=</span><span class="n">crs</span><span class="p">,</span> <span class="n">geometry</span><span class="o">=</span><span class="p">[</span><span class="n">polygon_geom</span><span class="p">])</span>
+
+
+<span class="c1">#Plot...</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">usa_map</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">facecolor</span> <span class="o">=</span> <span class="s1">&#39;lightgrey&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+<span class="n">solar_rect</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">facecolor</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\steff\Anaconda3\envs\geo_env\lib\site-packages\pyproj\crs\crs.py:141: FutureWarning: &#39;+init=&lt;authority&gt;:&lt;code&gt;&#39; syntax is deprecated. &#39;&lt;authority&gt;:&lt;code&gt;&#39; is the preferred initialization method. When making the change, be mindful of axis order changes: https://pyproj4.github.io/pyproj/stable/gotchas.html#axis-order-changes-in-proj-6
+  in_crs_string = _prepare_from_proj_string(in_crs_string)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
+</pre></div>
+</div>
+<img alt="_images/c4ead42ad63f6068bb0a7b84d6594a68d718f1dcd6a07df0464fe4ecb674d45d.png" src="_images/c4ead42ad63f6068bb0a7b84d6594a68d718f1dcd6a07df0464fe4ecb674d45d.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#What does our GeoDataFrame look like?</span>
+<span class="n">solar_rect</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>geometry</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>POLYGON ((-284162.691 1806207.058, -154015.576...</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Area for solar as fraction of US area?</span>
+<span class="c1">###########</span>
+
+<span class="n">solar_rect</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">usa_map</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.0017810230604964358
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Get the areas of the polygons that make up the multipolygon?</span>
+<span class="n">polys</span> <span class="o">=</span> <span class="n">usa_map</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">explode</span><span class="p">()</span>
+
+<span class="n">polys</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>C:\Users\steff\AppData\Local\Temp\ipykernel_32268\706844601.py:2: FutureWarning: Currently, index_parts defaults to True, but in the future, it will default to False to be consistent with Pandas. Use `index_parts=True` to keep the current behavior and True/False to silence the warning.
+  polys = usa_map.geometry.explode()
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4  0    POLYGON ((-1962161.370 3167162.825, -1759244.7...
+   1    POLYGON ((-5994579.739 1621439.289, -5984478.4...
+   2    POLYGON ((-6002902.016 1718460.300, -6017763.5...
+   3    POLYGON ((-6042036.927 1802608.920, -6051657.0...
+   4    POLYGON ((-6114401.729 1930232.663, -6111577.2...
+   5    POLYGON ((-6193278.678 2059630.455, -6207172.8...
+   6    POLYGON ((-3942083.583 5624680.128, -3912081.0...
+   7    POLYGON ((-3445165.527 4916819.652, -3413967.0...
+   8    POLYGON ((-2268903.691 5499339.016, -2268904.2...
+   9    POLYGON ((-3937165.872 6081290.121, -3924949.6...
+Name: geometry, dtype: geometry
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#The first is CONUS:</span>
+<span class="n">polys</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/789b450587ab09a746ef0ec92ef3b88b060a49cd3b5b18e7c52aa0ac2ba532df.svg" src="_images/789b450587ab09a746ef0ec92ef3b88b060a49cd3b5b18e7c52aa0ac2ba532df.svg" /></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Note, if you want the coords:</span>
+<span class="nb">list</span><span class="p">(</span><span class="n">polys</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(-1962161.3702512002, 3167162.8253698274),
+ (-1759244.7090589108, 3111553.2812018204),
+ (-1545449.6330413173, 3059930.61815036),
+ (-1474314.709586353, 3044312.18363005),
+ (-1252770.483023552, 3000572.8999905614),
+ (-1037133.5987980213, 2965028.692290655),
+ (-816816.1897191196, 2935763.8813647977),
+ (-595559.4239206862, 2913440.4502210645),
+ (-344366.35286531027, 2896648.6669438877),
+ (-91028.37163248812, 2888887.159950868),
+ (62301.831000003694, 2888497.2179712243),
+ (62147.38396207218, 2930667.6015315508),
+ (87068.35232383838, 2931459.6548542823),
+ (101006.71912840151, 2871364.440293248),
+ (124418.75843760684, 2853125.822644014),
+ (176573.7886802904, 2847470.3865310536),
+ (253257.45300077528, 2832260.9967512945),
+ (327245.01461478753, 2801104.8235037685),
+ (387207.16933892755, 2818455.9851389676),
+ (481130.7062799805, 2795471.349114236),
+ (505602.3432948148, 2798248.833605114),
+ (570219.6059053084, 2834425.8915207386),
+ (643838.0438532329, 2800561.163444683),
+ (721422.9436960664, 2765099.265672206),
+ (786428.3534551765, 2734908.200943919),
+ (849302.778833168, 2706395.2936531566),
+ (860092.710574457, 2678344.351369029),
+ (879368.0740272958, 2669671.988981),
+ (876010.4580188135, 2658204.4898509462),
+ (896944.5076263376, 2657313.7515170607),
+ (910403.92852568, 2670543.967616187),
+ (917524.6569041987, 2644978.2032167),
+ (935169.3937639846, 2629496.750178407),
+ (956259.81054559, 2632229.652571161),
+ (969296.6790022642, 2620265.288222991),
+ (962383.1020899815, 2599443.0229957663),
+ (1050039.1545406047, 2558800.1457565483),
+ (1081039.2313449422, 2461205.521876811),
+ (1110846.1384718216, 2367631.6791842305),
+ (1096971.8304474012, 2298920.559685891),
+ (1067669.4486708764, 2232704.721197529),
+ (1055138.5526097198, 2191473.1710527563),
+ (1054921.380452739, 2179666.832754751),
+ (1066243.8202757041, 2165081.0571867456),
+ (1096454.2337480504, 2151470.159307652),
+ (1116976.7728265573, 2154390.9936997006),
+ (1202698.370201888, 2227637.604647981),
+ (1283219.6762079608, 2258463.6517575826),
+ (1378747.5487217123, 2331556.786252367),
+ (1378270.4600091216, 2342983.0693932096),
+ (1365027.8154898717, 2375203.659404089),
+ (1348313.8914044409, 2394469.690380144),
+ (1380882.1751514468, 2418384.9849974783),
+ (1458361.9658945145, 2433495.263042491),
+ (1530691.564299216, 2447900.086523778),
+ (1547018.8471339704, 2495654.839144193),
+ (1555014.839196786, 2506192.406670005),
+ (1620136.097533703, 2602283.2418724773),
+ (1650386.739111339, 2630036.6236841725),
+ (1766667.4044223127, 2658096.699436524),
+ (1907290.4233484124, 2693806.7474333197),
+ (1907880.8394221975, 2722359.383749529),
+ (1930701.9169211322, 2734224.051560079),
+ (1958310.9896101505, 2759523.88585523),
+ (1971578.6620630845, 2815597.3125913846),
+ (1971087.0259121298, 2905037.669262234),
+ (2004194.3463309093, 3001291.0156156505),
+ (2036569.8668486348, 2980463.22869681),
+ (2080138.4783117266, 3012990.2096694787),
+ (2121757.429716026, 2992276.1089703864),
+ (2165909.473363354, 2847694.8471634067),
+ (2233376.9260382843, 2802803.511785382),
+ (2257301.174934605, 2772082.0021861847),
+ (2192394.3260581214, 2695523.335982741),
+ (2124825.7963073896, 2635295.45341839),
+ (2052517.6578377364, 2580334.61500408),
+ (2029034.2831178883, 2505068.9979390698),
+ (2022378.4627556414, 2477212.1007709373),
+ (2037105.1843521802, 2419790.0015011425),
+ (2078887.9678691812, 2369749.2073171968),
+ (2112631.7828546544, 2376205.6610815427),
+ (2093330.025803339, 2413210.391770266),
+ (2123791.037816387, 2395937.6151934555),
+ (2126091.380942096, 2363380.487942149),
+ (2077089.9971450253, 2330963.835979128),
+ (2038092.694692345, 2322664.0927712065),
+ (1983741.5174993041, 2288132.639554308),
+ (1950127.8926859817, 2273708.488683062),
+ (1904586.6682338591, 2256558.6269738334),
+ (1844751.712074671, 2208616.235554483),
+ (1958625.6831873362, 2258484.8786152913),
+ (1987841.4065113019, 2244087.6455218834),
+ (1882352.8591841282, 2182990.8124207407),
+ (1830441.951203596, 2170329.541240083),
+ (1829703.5251288333, 2184281.2444681074),
+ (1811931.579527464, 2148217.114969529),
+ (1837196.963055805, 2148863.170308624),
+ (1837833.7294704786, 2066333.4304693395),
+ (1796567.9937833431, 1968342.4989405312),
+ (1784021.9189797265, 1995027.1579641823),
+ (1764416.1599073943, 1996620.1197672065),
+ (1731035.0497745958, 2017953.1953704408),
+ (1761379.675130223, 1962831.4596141882),
+ (1786533.575101855, 1947992.6646341875),
+ (1797061.3130711655, 1906942.1470349052),
+ (1779354.420568494, 1858387.127720829),
+ (1750284.43463452, 1760475.0243196632),
+ (1741530.2650569265, 1763154.064149323),
+ (1751942.1477049086, 1843394.0526727424),
+ (1699610.6097384575, 1876005.4039165592),
+ (1670566.969880367, 1965051.51948696),
+ (1664266.0932237564, 1914229.2142569493),
+ (1696871.0579375569, 1848401.9197680748),
+ (1637164.2267420487, 1854017.6568979463),
+ (1703040.2767956483, 1830764.7531173527),
+ (1728686.2917862823, 1727190.0226618217),
+ (1755063.0810150255, 1724871.4691155695),
+ (1772170.3089715955, 1688894.5336586484),
+ (1808075.7985763396, 1582021.41261692),
+ (1769241.9486672217, 1488825.1085283768),
+ (1683717.248307338, 1437534.7326451698),
+ (1637251.946718713, 1361689.2510012384),
+ (1593517.9346840007, 1346157.1996983471),
+ (1555044.6688354504, 1297399.0596953235),
+ (1548651.4457776158, 1258186.9467627222),
+ (1460300.1243782714, 1169447.94116383),
+ (1416736.2094655093, 1108546.2940833373),
+ (1383121.580909412, 1036394.6967316999),
+ (1380716.1524889048, 956056.0724054346),
+ (1409270.659806251, 882427.270771329),
+ (1455957.891333312, 793761.3684431688),
+ (1511352.5717110827, 723370.2737727441),
+ (1519632.3413928142, 676339.6980479431),
+ (1587067.7726526738, 557918.4275585766),
+ (1596320.6540945584, 484285.1506803474),
+ (1599091.106356917, 441440.9527247731),
+ (1585131.817711944, 371243.3150881501),
+ (1557273.068732894, 352669.923578951),
+ (1505598.5205167118, 357848.9566704863),
+ (1482304.0717384238, 402869.1966373688),
+ (1440421.4338256172, 421965.34587057057),
+ (1373743.2645116257, 507595.179574272),
+ (1315862.3897397118, 584432.3659530238),
+ (1295149.564552396, 625115.616538556),
+ (1304973.2657337338, 700550.5940726483),
+ (1269433.2645727424, 757035.2212015291),
+ (1182191.947520575, 838887.1769225844),
+ (1142712.2095336965, 851001.9058105175),
+ (1052040.5670877856, 789364.7580005802),
+ (1034198.6275139682, 792904.9991114667),
+ (981975.8460512467, 839201.543735869),
+ (919223.1097153258, 860251.7170031212),
+ (812536.6878451281, 836058.6007081899),
+ (726610.7662672211, 841108.1219800207),
+ (654204.3599699873, 827934.5104775291),
+ (615780.5874095608, 807895.553545321),
+ (635107.3100234325, 779651.18236329),
+ (636647.9365477177, 734677.2791246114),
+ (658749.8373741424, 714285.702006282),
+ (641280.627434412, 698455.2725197416),
+ (604167.183316932, 712329.369626012),
+ (569051.6180866455, 689041.0963065786),
+ (498302.0498772403, 688405.6650442906),
+ (423002.20518000715, 743279.2724809416),
+ (339183.30657841597, 725967.107344404),
+ (267992.70245443913, 749294.8567086547),
+ (208077.0851944143, 739962.3741399416),
+ (127052.8796093935, 712579.9911674488),
+ (39116.38080350963, 629687.1871526614),
+ (-58426.04855337957, 582112.0606397318),
+ (-112754.21579502954, 529870.0507188218),
+ (-136217.0411491866, 480537.89156293933),
+ (-138314.40627155968, 404571.66491704533),
+ (-134041.5372329825, 351734.7548686321),
+ (-115341.17624992668, 314156.2232093805),
+ (-154850.63159003816, 311418.62373271),
+ (-226130.03794679188, 336986.63489187777),
+ (-303766.97955200117, 373205.21269756835),
+ (-330125.11744623876, 425805.5157311295),
+ (-349268.0748144659, 503666.53065924626),
+ (-405056.5147732113, 568870.4082192845),
+ (-436079.68648405006, 635126.6719527817),
+ (-481190.9024765398, 713253.4791555197),
+ (-546893.2686103391, 761186.0225408179),
+ (-625891.5346940664, 764095.2339470979),
+ (-693175.7185982937, 681153.0498381488),
+ (-771143.5534427983, 720666.231175107),
+ (-818250.0295020347, 758329.2641545685),
+ (-836675.2153927427, 821234.600281925),
+ (-862943.4457938503, 881955.7668778842),
+ (-914547.4786067732, 936174.3532195768),
+ (-959171.3061137742, 976196.5776785893),
+ (-989164.6558691459, 1019177.2496851989),
+ (-1151407.2073647554, 1038725.4389425942),
+ (-1157489.691983654, 993192.8356927695),
+ (-1232022.057667856, 1003132.156629345),
+ (-1418641.8462424949, 1030071.1014760415),
+ (-1617634.373482361, 1143830.9284603316),
+ (-1746355.227247649, 1223775.5356632737),
+ (-1733510.711218414, 1243448.9680750293),
+ (-1851945.2174555154, 1255559.7968843202),
+ (-1957421.539759286, 1269943.0796050965),
+ (-1960076.336980511, 1328992.7311310677),
+ (-2003982.173116091, 1405059.0433463776),
+ (-2042685.4809328986, 1427999.850267002),
+ (-2044935.220333874, 1461514.3358942627),
+ (-2093543.8983420841, 1479183.849258852),
+ (-2117963.763992349, 1516447.946561818),
+ (-2197295.5007621697, 1548220.181859169),
+ (-2215156.846128905, 1571599.1666557556),
+ (-2210045.6177955475, 1633710.1118658276),
+ (-2264555.470743325, 1765087.2511918065),
+ (-2293070.0583613804, 1934969.856677971),
+ (-2282938.4397534644, 1959071.2280651412),
+ (-2309552.695452179, 2005298.919349266),
+ (-2346993.6254543155, 2114325.825090413),
+ (-2331926.5869173603, 2205216.3957821657),
+ (-2357184.3803542214, 2276900.6133313477),
+ (-2312405.311721423, 2360258.8256570143),
+ (-2287101.355258211, 2452887.919336046),
+ (-2286854.103000409, 2542461.506905325),
+ (-2225758.2011047704, 2633776.4541989625),
+ (-2187021.6431482267, 2727738.502891973),
+ (-2148586.8550897487, 2821594.1867986126),
+ (-2118770.6498791627, 2968036.47491679),
+ (-2114070.014464406, 3065498.1650588363),
+ (-2119891.9057790814, 3120906.077991771),
+ (-2104844.802853358, 3138757.0650296845),
+ (-2011818.1651765152, 3071597.1529123345),
+ (-2002142.8625892093, 2960222.4138481636),
+ (-1976009.4867850689, 2983112.5684023164),
+ (-1962790.3501725395, 3073454.0534645924),
+ (-1962161.3702512002, 3167162.8253698274)]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#And area as fraction of CONUS area:</span>
+<span class="c1">###########</span>
+
+<span class="n">solar_rect</span><span class="o">.</span><span class="n">area</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">polys</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">area</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.002121437106277736
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">type</span><span class="p">(</span><span class="n">polys</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>shapely.geometry.polygon.Polygon
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#Note, we can also make a GeoDataFrame of CONUS:</span>
+
+<span class="n">gdf_CONUS</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoDataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">geometry</span> <span class="o">=</span> <span class="p">[</span><span class="n">polys</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">crs</span> <span class="o">=</span> <span class="s2">&quot;EPSG:5070&quot;</span><span class="p">)</span>
+
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax1</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+
+<span class="n">gdf_CONUS</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">facecolor</span> <span class="o">=</span> <span class="s1">&#39;lightgrey&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+
+<span class="c1">#Plot the calculated centroid:</span>
+<span class="n">gdf_CONUS</span><span class="p">[</span><span class="s1">&#39;cent&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">gdf_CONUS</span><span class="o">.</span><span class="n">centroid</span>
+<span class="n">gdf_CONUS</span> <span class="o">=</span> <span class="n">gdf_CONUS</span><span class="o">.</span><span class="n">set_geometry</span><span class="p">(</span><span class="s1">&#39;cent&#39;</span><span class="p">)</span>
+
+<span class="n">gdf_CONUS</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">facecolor</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.5</span><span class="p">)</span>
+
+<span class="c1">#Compare to the given value:</span>
+<span class="n">gdf_center</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span> <span class="o">=</span> <span class="n">ax1</span><span class="p">,</span> <span class="n">facecolor</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">.5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;AxesSubplot: &gt;
+</pre></div>
+</div>
+<img alt="_images/2be76bbc2b2379e8c0054977b6f13d8f9b2649d8052c43b5f6389ab3e29c27a5.png" src="_images/2be76bbc2b2379e8c0054977b6f13d8f9b2649d8052c43b5f6389ab3e29c27a5.png" />
+</div>
+</div>
+</div>
+</div>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="intro.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Welcome to your Jupyter Book</p>
+      </div>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Intro to geopandas: The very basics</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#load-the-library-create-and-environment-if-needed">Load the library, create and environment if needed</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#basic-geopandas-first-let-s-load-some-very-basic-natural-earth-data">Basic geopandas: First let’s load some very basic Natural Earth data</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#can-also-do-pandas-plot-methods-with-geopandas">Can also do pandas plot methods with geopandas:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#or-with-seaborn">Or with seaborn:</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#some-basic-choropleth-plots">Some Basic “Choropleth” Plots!</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#recall-crs-and-centroids">Recall CRS and Centroids</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#let-s-add-some-cities">Let’s add some cities</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make-your-own-points-geodataframe">Make your own points/GeoDataFrame</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#make-and-plot-polygon-geometries">Make and plot polygon geometries…</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Steffen E. Eikenberry
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
