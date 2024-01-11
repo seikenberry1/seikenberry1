@@ -8,3 +8,5 @@ I teach data science classes to pay the bills.
 
 
 So it goes (Vonnegut).
+
+Yup.
