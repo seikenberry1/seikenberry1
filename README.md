@@ -6,7 +6,4 @@ I guess I'm a data scientist of sorts. Interested in environmental epidemiology,
 
 I teach data science classes to pay the bills.
 
-Yet another change here. And here.
-
-So it goes. And goes.
-
+This is a different branch.
