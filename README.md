@@ -6,7 +6,3 @@ I guess I'm a data scientist of sorts. Interested in environmental epidemiology,
 
 I teach data science classes to pay the bills.
 
-So it goes (Vonnegut).
-
-Yup.
-
